@@ -37,14 +37,8 @@ class ScoreConfig:
         default_factory=DatasetConfig.get_choice_class(DatasetRegistry.AI2D_FULL.dataset_id)
     )
 
-    # === Model Parameters =>> Prismatic ===
-    model_id: str = "prism-clip+7b"                 # Model ID to load and run (instance of `model_family`)
-
-    # === Model Parameters =>> Official LLaVa ===
-    # model_id: str = "llava-v1.5-7b"
-
-    # === Model Parameters =>> Official InstructBLIP ===
-    # model_id: str = "instructblip-vicuna-7b"
+    # === Model Parameters =>> LLaVa-Gemma ===
+    model_id: str = "llava-gemma-v1.5"
 
     config_yaml: Optional[Path] = None
 

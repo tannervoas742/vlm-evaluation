@@ -210,7 +210,7 @@ class LLaVa(VLM):
         #   => Ref (v1): https://github.com/haotian-liu/LLaVA/blob/main/llava/eval/model_vqa_science.py#L53
         #   => Ref (v1.5): https://github.com/haotian-liu/LLaVA/blob/main/docs/Evaluation.md#evaluate-on-custom-datasets
         q_prompt = DEFAULT_IMAGE_TOKEN + "\n"
-        if self.model_id.startswith("llava-v1.5"):
+        if self.model_id.startswith("llava-") and self.model_id.endswith("-v1.5"):
             q_prompt += "\nProvide a short image description."
 
         # Derive the full `vqa_prompt` following the logic from LLaVa/LLaMa (insert <SYS> and <INST> role tags)
@@ -235,7 +235,7 @@ class LLaVa(VLM):
         #   => Ref (v1): https://github.com/haotian-liu/LLaVA/blob/main/llava/eval/model_vqa_science.py#L53
         #   => Ref (v1.5): https://github.com/haotian-liu/LLaVA/blob/main/docs/Evaluation.md#evaluate-on-custom-datasets
         q_prompt = DEFAULT_IMAGE_TOKEN + "\n" + "{question}"
-        if self.model_id.startswith("llava-v1.5"):
+        if self.model_id.startswith("llava-") and self.model_id.endswith("-v1.5"):
             # For some evaluation such as VizWiz, models are expected to output "unanswerable" when questions are
             # ambiguous --> LLaVa 1.5 handles this by injecting the following "trigger phrase" into the prompt.
             if uncertainty_aware:
@@ -312,7 +312,7 @@ class LLaVa(VLM):
         #   => Ref (v1): https://github.com/haotian-liu/LLaVA/blob/main/llava/eval/model_vqa_science.py#L53
         #   => Ref (v1.5): https://github.com/haotian-liu/LLaVA/blob/main/docs/Evaluation.md#evaluate-on-custom-datasets
         q_prompt = DEFAULT_IMAGE_TOKEN + "\n" + "{question}\n{choice_str}"
-        if self.model_id.startswith("llava-v1.5"):
+        if self.model_id.startswith("llava-") and self.model_id.endswith("-v1.5"):
             q_prompt += "\nAnswer with the option's letter from the given choices directly."
 
         # Derive the full `vqa_prompt` following the logic from LLaVa/LLaMa (insert <SYS> and <INST> role tags)

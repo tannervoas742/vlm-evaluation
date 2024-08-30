@@ -7,7 +7,7 @@ verification process, writing both WebDataset and Mosaic Streaming (MDS) version
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Tuple, Union, Optional
 
 import draccus
 
@@ -45,7 +45,7 @@ class DatasetPreparationConfig:
     )
 
     # HF Hub Credentials (for LLaMa-2)
-    hf_token: Union[str, Path] = Path(".hf_token")              # Env Variable or Path to HF Token
+    hf_token: Optional[Union[str, Path]] = None                 # Env Variable or Path to HF Token
 
     # Randomness
     seed: int = 21                                              # Random Seed (for slim datasets, augmentations)
@@ -58,7 +58,10 @@ def prepare(cfg: DatasetPreparationConfig) -> None:
 
     # Phase 1 :: Download & Extract Raw Data to `cfg.data_dir` / cfg.dataset_id / "download"
     overwatch.info(f"Phase 1 =>> Downloading & Extracting `{cfg.dataset_family}` to {cfg.root_dir / 'download'}")
-    hf_token = cfg.hf_token.read_text().strip() if isinstance(cfg.hf_token, Path) else os.environ[cfg.hf_token]
+    if cfg.hf_token is not None:
+        hf_token = cfg.hf_token.read_text().strip() if isinstance(cfg.hf_token, Path) else os.environ.get(cfg.hf_token, None)
+    else:
+        hf_token = None
     download_extract(cfg.dataset_family, cfg.root_dir, hf_token)
 
     # Phase 2 :: Assemble Index Dataset(s) (always builds metadata from local disk, then used to export other formats)

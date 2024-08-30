@@ -30,7 +30,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "accelerate",
     "ascii_magic",
     "draccus @ git+https://github.com/dlwh/draccus",
     "gradio==3.35.2",
@@ -38,7 +37,6 @@ dependencies = [
     "pydantic==1.10.14",
     "jsonlines",
     "jinja2==3.0.3",
-    "llava @ git+https://github.com/suraj-nair-tri/LLaVA",
     "mosaicml-streaming",
     "openai",
     "prismatic @ git+https://github.com/TRI-ML/prismatic-vlms",
@@ -49,7 +47,7 @@ dependencies = [
     "torch>=2.1.0",
     "torchvision",
     "torchaudio",
-    "transformers==4.34.1", ## Pinned to avoid namespace conflict with LLaVa models
+    "transformers",
     "webdataset",
     "pymongo",
     "spacy==3.7.3"

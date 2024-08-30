@@ -52,11 +52,11 @@ class VQAv2SubSampledDatasetConfig(DatasetConfig):
     dataset_id: str = "vqa-v2-subsampled"
     split: str = "val"
 
-    expected_examples: int = 16384
+    expected_examples: int = 8192
     root_dir: Path = Path("../../datasets/vlm-evaluation")
-    index_file: Path = Path("datasets/vqa-v2/metadata-slim-16384.json")
-    annotations_file: Path = Path("datasets/vqa-v2/annotations-vqa-v2-slim-16384.json")
-    questions_file: Path = Path("datasets/vqa-v2/questions-vqa-v2-slim-16384.json")
+    index_file: Path = Path("datasets/vqa-v2/metadata-slim-8192.json")
+    annotations_file: Path = Path("datasets/vqa-v2/annotations-vqa-v2-slim-8192.json")
+    questions_file: Path = Path("datasets/vqa-v2/questions-vqa-v2-slim-8192.json")
 
 
 @dataclass
@@ -321,7 +321,7 @@ class PopeFullDatasetConfig(DatasetConfig):
     annotations_file: Path = Path("datasets/pope/metadata-full.json")
 
     # Examples = n = 3000 for each of adversarial/popular/random splits = 3 * 3000 = 9000
-    expected_examples: int = 9000
+    expected_examples: int = 8910
 
 
 @dataclass

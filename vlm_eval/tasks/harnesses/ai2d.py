@@ -201,10 +201,7 @@ class AI2DTaskRunner:
         self.root_dir, self.index_file, self.task_results_dir = root_dir, index_file, task_results_dir
         self.model_id, self.prompt_fn, self.image_processor = model_id, prompt_fn, image_processor
 
-        # === Unfortunate Pattern =>> Accelerate injects a lot of additional stuff into env; minimize collateral ===
-        from accelerate import PartialState
-
-        self.distributed_state = PartialState()
+        self.distributed_state = None
 
         # Short-Circuit (if results/metrics already exist)
         os.makedirs(self.task_results_dir, exist_ok=True)
@@ -218,6 +215,7 @@ class AI2DTaskRunner:
 
     def evaluate(self, vlm: VLM, device_batch_size: int, num_workers: int) -> None:
         """Initialize Dataloader & partition data across ranks, writing metrics to disk on termination."""
+        self.distributed_state = vlm.distributed_state
         sampler = DistributedSampler(
             self.dataset,
             num_replicas=self.distributed_state.num_processes,
@@ -236,13 +234,12 @@ class AI2DTaskRunner:
             overwatch.info(f"Distributing Evaluation across {self.distributed_state.num_processes} GPUs", ctx_level=1)
             for question_ids, question_prompts, pixel_values, questions, answer_choices, answer_labels in tqdm(
                 dataloader,
-                desc="=>> Evaluating",
-                disable=not self.distributed_state.is_main_process,
+                desc=f"=>> Evaluating({self.distributed_state.process_index + 1}/{self.distributed_state.num_processes}): ",
             ):
                 if isinstance(pixel_values, torch.Tensor):
-                    pixel_values = pixel_values.to(self.distributed_state.device)
+                    pixel_values = pixel_values.to(vlm.model.device, dtype=vlm.dtype)
                 elif isinstance(pixel_values, dict):
-                    pixel_values = {k: v.to(self.distributed_state.device) for k, v in pixel_values.items()}
+                    pixel_values = {k: v.to(vlm.model.device, dtype=vlm.dtype) for k, v in pixel_values.items()}
                 else:
                     raise ValueError(f"Unexpected `pixel_values` type = {type(pixel_values)}")
 
